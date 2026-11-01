@@ -1,25 +1,31 @@
 # Print Shop Order Manager
 
-A Java Swing desktop application for managing print orders in MySQL. The menu,
-forms, order tables, confirmations, payment screens, dashboard, and receipt
-preview all appear in desktop dialog windows; the application does not use a
-browser or require terminal interaction after launch.
+A small Java Swing desktop application for managing print orders in MySQL.
+Screens open in desktop dialogs; no browser or terminal interaction is needed
+after launch.
 
 ## Features
 
-- Create, browse, search, update, and delete print orders.
-- Sortable order table with details and row actions.
+- Create, search, browse, update, and delete print orders.
+- Sortable order table, order details, and order-status tracking.
 - Live bill calculation using the existing rates:
   - Black-and-white: **₹2 per page**
   - Colour: **₹10 per page**
   - Spiral binding: **₹30 per copy**
   - No binding: **₹0**
 - Order status tracking: Pending, In Progress, Ready for Pickup, and Delivered.
-- Payment history with partial payments and outstanding balance validation.
-- Receipt preview, save as TXT, and print.
-- Live dashboard statistics from MySQL.
 
 The bill remains `(pages × copies × printing rate) + (copies × binding charge)`.
+
+## Java file guide
+
+The code is grouped into five files so each part has a clear job:
+
+- `PrintShop.java` starts the application.
+- `Order.java` stores order details and calculates bills.
+- `OrderRepository.java` contains the MySQL queries.
+- `Ui.java` provides shared dialog layout, controls, and message helpers.
+- `Dialogs.java` contains the menu and order screens.
 
 ## Requirements
 
@@ -29,29 +35,10 @@ The bill remains `(pages × copies × printing rate) + (copies × binding charge
 
 ## Database setup
 
-For a new database, run `print_shop.sql` once to create the existing
-`print_shop.orders` table. Then apply the payment-history migration below.
-The base schema file is unchanged.
-
-For an existing installation, do **not** recreate or reset the database. Back
-up the database, then apply the same additive, re-runnable migration:
-
-```powershell
-Get-Content .\migrations\001_payment_history.sql | mysql -u root -p
-```
-
-The migration creates the payment history table without changing existing
-order IDs or deleting orders. It also creates a one-time payment record for
-each existing order whose status is `Paid`, treating that legacy status as
-payment of the recorded total. Existing unpaid orders remain unchanged.
-
-If `mysql` is not on `PATH`, run the command using the full path to `mysql.exe`.
-For example:
-
-```powershell
-Get-Content .\migrations\001_payment_history.sql | `
-  & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
-```
+For a new database, run `print_shop.sql` once to create the `print_shop.orders`
+table. For an existing installation, use its existing `print_shop` database;
+do not recreate or reset it. The payment-history migration is not needed for
+this simplified demo.
 
 ## Database connection
 
@@ -64,13 +51,12 @@ password default. No password environment-variable setup is required.
 Run these commands from the project directory:
 
 ```powershell
-javac -encoding UTF-8 -cp ".;lib\*" -d out PrintShop.java
+$sources = Get-ChildItem -Filter *.java | ForEach-Object { $_.Name }
+javac -encoding UTF-8 -cp ".;lib\*" -d out $sources
 if ($LASTEXITCODE -eq 0) {
     java -cp "out;lib\*" PrintShop
 }
 ```
 
-The program opens its desktop menu after launch. Once it is open, user
-interaction takes place in its dialogs rather than in the terminal. If the
-database is unavailable or the payment migration has not been applied, the
-application reports the problem in a dialog.
+The program opens its desktop menu after launch. If the database is unavailable,
+the application reports the problem in a dialog.
