@@ -1,54 +1,57 @@
 # Print Shop Order Manager
 
-A small Java Swing desktop application for managing print orders in MySQL.
-Screens open in desktop dialogs; no browser or terminal interaction is needed
-after launch.
+A Java Swing desktop application for managing print-shop orders. The application
+stores order information in a MySQL database and provides a desktop interface
+for creating, finding, updating, and tracking orders.
 
 ## Features
 
-- Create, search, browse, update, and delete print orders.
-- Sortable order table, order details, and order-status tracking.
-- Live bill calculation using the existing rates:
-  - Black-and-white: **₹2 per page**
-  - Colour: **₹10 per page**
+- Create, search, view, update, and delete print orders.
+- Browse orders in a sortable table and track their status.
+- Calculate order totals using the configured print and binding rates:
+  - Black-and-white printing: **₹2 per page**
+  - Colour printing: **₹10 per page**
   - Spiral binding: **₹30 per copy**
   - No binding: **₹0**
-- Order status tracking: Pending, In Progress, Ready for Pickup, and Delivered.
-
-The bill remains `(pages × copies × printing rate) + (copies × binding charge)`.
-
-## Java file guide
-
-The code is grouped into five files so each part has a clear job:
-
-- `PrintShop.java` starts the application.
-- `Order.java` stores order details and calculates bills.
-- `OrderRepository.java` contains the MySQL queries.
-- `Ui.java` provides shared dialog layout, controls, and message helpers.
-- `Dialogs.java` contains the menu and order screens.
+- Calculate the total as `(pages × copies × printing rate) + (copies × binding charge)`.
+- Track order statuses: Pending, In Progress, Ready for Pickup, and Delivered.
 
 ## Requirements
 
-- JDK 11 or later (`java` and `javac`).
+- JDK 11 or later, including `java` and `javac`.
 - MySQL Server 8.0 or later.
-- The MySQL Connector/J driver at `lib\mysql-connector-j-9.5.0.jar`.
+- MySQL Connector/J, included at `lib\mysql-connector-j-9.5.0.jar`.
 
-## Database setup
+## Set up the database
 
-For a new database, run `print_shop.sql` once to create the `print_shop.orders`
-table. For an existing installation, use its existing `print_shop` database;
-do not recreate or reset it. The payment-history migration is not needed for
-this simplified demo.
+1. Start MySQL Server.
+2. Open `print_shop.sql` in a MySQL client such as MySQL Workbench and execute
+   it. This creates the `print_shop` database and its `orders` table if they do
+   not already exist.
+3. If you already have a `print_shop` database, keep your existing data; do not
+   reset or recreate it.
 
-## Database connection
+The `migrations\001_payment_history.sql` file is not required by this version
+of the application.
 
-The app uses the project's existing local MySQL defaults: URL
-`jdbc:mysql://localhost:3306/print_shop`, user `root`, and the existing local
-password default. No password environment-variable setup is required.
+## Configure the database connection
 
-## Compile and launch on Windows
+By default, the application connects to `jdbc:mysql://localhost:3306/print_shop`
+as user `root`. Override the connection settings with environment variables or
+Java system properties:
 
-Run these commands from the project directory:
+| Setting | Environment variable | Java property |
+| --- | --- | --- |
+| JDBC URL | `PRINTSHOP_DB_URL` | `printshop.db.url` |
+| Username | `PRINTSHOP_DB_USER` | `printshop.db.user` |
+| Password | `PRINTSHOP_DB_PASSWORD` | `printshop.db.password` |
+
+Set these values to match your local MySQL configuration before launching the
+application.
+
+## Compile and run on Windows
+
+Open PowerShell in the project directory and run:
 
 ```powershell
 $sources = Get-ChildItem -Filter *.java | ForEach-Object { $_.Name }
@@ -58,5 +61,13 @@ if ($LASTEXITCODE -eq 0) {
 }
 ```
 
-The program opens its desktop menu after launch. If the database is unavailable,
-the application reports the problem in a dialog.
+The desktop menu opens after launch. If the database cannot be reached, the
+application displays an error dialog.
+
+## Source files
+
+- `PrintShop.java` — application entry point.
+- `Order.java` — order data and bill calculation.
+- `OrderRepository.java` — MySQL data access.
+- `Ui.java` — shared interface components and helpers.
+- `Dialogs.java` — application menu and order screens.
