@@ -54,8 +54,9 @@ final class Order {
     }
 
     static String displayStatus(String value) {
-        if ("Printing".equalsIgnoreCase(value)) return "In Progress";
-        if ("Ready".equalsIgnoreCase(value)) return "Ready for Pickup";
+        if ("Printing".equalsIgnoreCase(value) || "In Progress".equalsIgnoreCase(value)) return "Processing";
+        if ("Ready".equalsIgnoreCase(value) || "Ready for Pickup".equalsIgnoreCase(value)
+                || "Delivered".equalsIgnoreCase(value)) return "Completed";
         return value;
     }
 

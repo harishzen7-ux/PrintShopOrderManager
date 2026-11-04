@@ -135,9 +135,9 @@ final class OrderBrowserDialog extends AppDialog {
 
     private void changeStatus() {
         Order o=selected(); if(o==null)return;
-        JComboBox<String> status=new JComboBox<>(new String[]{"Pending","In Progress","Ready for Pickup","Delivered"});
+        JComboBox<String> status=new JComboBox<>(new String[]{"Pending","Processing","Completed"});
         status.setSelectedItem(o.state);
-        AppDialog d=new AppDialog(this,"Update Order Status","Choose the current production stage.",470,260,true);
+        AppDialog d=new AppDialog(this,"Update Order Status","Choose the current production stage.",470,360,true);
         JPanel form=Ui.panel(new GridLayout(0,1,10,10));
         JLabel customer=Ui.label("Order #"+o.id+" — "+o.name);
         customer.setFont(new Font("Segoe UI",Font.BOLD,14));

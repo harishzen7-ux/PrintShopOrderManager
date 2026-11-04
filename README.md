@@ -14,7 +14,7 @@ for creating, finding, updating, and tracking orders.
   - Spiral binding: **₹30 per copy**
   - No binding: **₹0**
 - Calculate the total as `(pages × copies × printing rate) + (copies × binding charge)`.
-- Track order statuses: Pending, In Progress, Ready for Pickup, and Delivered.
+- Track order statuses: Pending, Processing, and Completed.
 
 ## Requirements
 
@@ -55,9 +55,9 @@ Open PowerShell in the project directory and run:
 
 ```powershell
 $sources = Get-ChildItem -Filter *.java | ForEach-Object { $_.Name }
-javac -encoding UTF-8 -cp ".;lib\*" -d out $sources
-if ($LASTEXITCODE -eq 0) {
-    java -cp "out;lib\*" PrintShop
+ javac -encoding UTF-8 -cp ".;lib\*" -d out $sources
+ if ($LASTEXITCODE -eq 0) {
+  java -cp "out;lib\*" PrintShop
 }
 ```
 

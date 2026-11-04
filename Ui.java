@@ -86,7 +86,7 @@ final class Ui {
     static boolean confirm(Component parent,String title,String text) {
         Window owner=parent instanceof Window?(Window)parent:SwingUtilities.getWindowAncestor(parent);
         boolean[] yes={false};
-        AppDialog d=new AppDialog(owner,title,"Confirm to continue.",460,220,true);
+        AppDialog d=new AppDialog(owner,title,"Confirm to continue.",460,280,true);
         JTextArea msg=new JTextArea(text); msg.setWrapStyleWord(true); msg.setLineWrap(true);
         msg.setEditable(false); msg.setOpaque(false); msg.setForeground(INK);
         msg.setFont(new Font("Segoe UI",Font.PLAIN,14)); d.body.add(msg);
